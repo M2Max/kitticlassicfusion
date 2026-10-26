@@ -1,0 +1,23 @@
+# --- dati KITTI: mai nel repo (letti da KITTI_ROOT) ---
+data/
+
+# --- risultati e file generati ---
+results/
+outputs/
+*.pkl
+*.npy
+*.mp4
+*.avi
+
+# --- ambiente ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# --- sistema / editor ---
+.DS_Store
+.ipynb_checkpoints/
+.idea/
+.vscode/
