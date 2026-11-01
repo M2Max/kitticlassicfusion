@@ -1,1 +1,1 @@
-"""Un detector per modalità di input (per ora solo LiDAR)."""
+"""Un detector per metodo: detect(i, calib) -> (scatole, classi, confidenze) e cloud(i) per i grafici."""

@@ -19,6 +19,8 @@ def plane_from_points(points):
 def ransac_floor(points, tries=500, threshold=0.2):
     rng = np.random.default_rng(42)
     low = points[points[:, 2] < -1.5] 
+    if len(low) < 3:                        # quasi nulla in basso (stereo senza suolo): piano fra tutti i punti
+        low = points
     best_votes, best_n, best_d = 0, None, None
     for i in range(tries):
         idx = rng.choice(len(low), size=3, replace=False) 

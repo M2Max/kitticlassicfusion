@@ -30,8 +30,8 @@ def box_height(pts, cx, cy, n, d):
     h = pts[:, 2].max() - z_bottom                      # dal suolo al punto più alto
     return z_bottom, h
 
-def find_boxes(points, point_labels, n_clusters, n, d, min_points=5):
-    boxes = []
+def find_boxes(points, point_labels, n_clusters, n, d, min_points=5, return_points=False):
+    boxes, clusters = [], []
     for k in range(1, n_clusters + 1):                  # le etichette vanno da 1 a n (0 = vuoto)
         pts = points[point_labels == k]                 # maschera: i punti del cluster k
         if len(pts) < min_points:                       # troppo pochi punti: rumore
@@ -39,7 +39,9 @@ def find_boxes(points, point_labels, n_clusters, n, d, min_points=5):
         cx, cy, l, w, psi = box_bev(pts[:, :2])
         z_bottom, h = box_height(pts, cx, cy, n, d)
         boxes.append([cx, cy, z_bottom, l, w, h, psi])
-    return np.array(boxes).reshape(-1, 7)               # una riga per scatola (forma (0, 7) se non ce ne sono)
+        clusters.append(pts)
+    boxes = np.array(boxes).reshape(-1, 7)              # una riga per scatola (forma (0, 7) se non ce ne sono)
+    return (boxes, clusters) if return_points else boxes   # return_points: anche i punti di ogni scatola
 
 def grow_car(box):
     cx, cy, z, l, w, h, psi = box
