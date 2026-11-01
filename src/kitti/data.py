@@ -1,6 +1,6 @@
 import numpy as np
 
-from config import DATA
+from config import DATA, SPLITS
 
 def load_calib(i):
     calib = {}
@@ -17,8 +17,9 @@ def load_lidar(i):
     path = DATA / "velodyne" / f"{i:06d}.bin"
     return np.fromfile(path, dtype=np.float32).reshape(-1, 4)   # x, y, z, riflettanza
 
-def n_frames():
-    return len(list((DATA / "calib").glob("*.txt")))
+def frame_ids(split):
+    # "train", "val", "trainval": frame elencati in ImageSets/<split>.txt
+    return [int(line) for line in (SPLITS / f"{split}.txt").read_text().split()]
 
 def load_labels(i):
     labels = []

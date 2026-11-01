@@ -17,8 +17,11 @@ def in_camera_fov(box, calib):
     u, _, w = calib["P2"].reshape(3, 4) @ np.append(p, 1.0) # un punto solo: forma a colonna, niente trasposte
     return 0 <= u / w < IMG_W                               # colonna del pixel dentro la foto
 
+def cloud(i):
+    return load_lidar(i)[:, :3]                             # x, y, z (senza riflettanza)
+
 def detect(i, calib):
-    points = load_lidar(i)[:, :3]
+    points = cloud(i)
     no_floor, n, d = ransac_floor(points)
     grid, i_r, i_theta, valid_mask = build_grid(no_floor)
     clean_labeled, n_clusters = labeling(grid)
@@ -35,4 +38,5 @@ def detect(i, calib):
             box = grow_car(box)                             # la parte nascosta sta dalla parte lontana
         det_boxes.append(box)
         det_classes.append(c)
-    return np.array(det_boxes).reshape(-1, 7), det_classes
+    scores = np.ones(len(det_boxes))                       # metodo classico: nessuna confidenza, tutte 1
+    return np.array(det_boxes).reshape(-1, 7), det_classes, scores

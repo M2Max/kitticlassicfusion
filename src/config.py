@@ -1,10 +1,12 @@
 import os
 from pathlib import Path
 
-N_frames = 7480
 N_R, N_THETA, R_MIN, R_MAX = 200, 1000, 2.0, 64.0
-KITTI_ROOT = Path(os.environ.get("KITTI_ROOT", Path(__file__).resolve().parent.parent / "data/kitti"))   # radice KITTI, configurabile da ambiente
+REPO = Path(__file__).resolve().parent.parent
+RESULTS = REPO / "results"                                  # results/<split>/<metodo>/: un'uscita per run
+KITTI_ROOT = Path(os.environ.get("KITTI_ROOT", REPO / "data/kitti"))   # radice KITTI, configurabile da ambiente
 DATA = KITTI_ROOT / "training"
+SPLITS = KITTI_ROOT / "ImageSets"                           # train.txt, val.txt: elenco dei frame per split
 CLASSES = ["Car", "Pedestrian", "Cyclist"]
 CAR_L, CAR_W = 3.9, 1.6                                     # misure medie di un'auto in KITTI
 IMG_W = 1242                                                # larghezza della foto (varia di pochi pixel fra frame)

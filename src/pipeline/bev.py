@@ -25,5 +25,4 @@ def labeling(grid):
     return clean_labeled, n
 
 def label_points(labels, i_r, i_theta):
-    print(labels[i_r, i_theta])
     return labels[i_r, i_theta]
