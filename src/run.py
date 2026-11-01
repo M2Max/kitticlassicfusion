@@ -1,4 +1,4 @@
-"""Lancia un metodo su uno split KITTI: record, tabelle e grafici in results/<split>/<metodo>/.
+"""Lancia un metodo su uno split KITTI: record, tabelle, grafici e matrice di confusione in results/<split>/<metodo>/.
 
 Uso: .venv/bin/python src/run.py L1 [--split val] [--limit 50] [--recompute] [--workers 1] [--video]
 """
@@ -9,6 +9,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 from config import RESULTS
 from detectors import lidar
+from evaluation.confusion import confusion_matrix, save_confusion
 from evaluation.iou import iou_3d
 from evaluation.result_analysis import analyze_run, load_run, make_sensor_video, save_run
 from kitti.data import frame_ids, load_calib
@@ -64,6 +65,7 @@ def main():
 
     cloud = METHODS[args.method][1]
     analyze_run(records, iou_3d, out_dir=out, load_points=cloud)         # tabelle + grafici
+    save_confusion(confusion_matrix(records, iou_3d), out, f"{args.method} su {args.split}")
     if args.video:
         make_sensor_video(records, cloud, out / "sensor_view.mp4", fps=10)
 

@@ -98,13 +98,18 @@ def greedy_match(ious, thresh):
         pairs.append((int(i), int(j)))
     return pairs
 
-def class_split(rec, c):
-    # Le det della classe c, le GT valide di c, e le GT ignorate (c fuori Moderate, o classe vicina)
-    det_sel = np.array([k == c for k in rec["det_classes"]], dtype=bool)
+def class_indices(rec, c):
+    # Indici (nel record) delle det della classe c, delle GT valide di c e delle GT ignorate (c fuori Moderate, o classe vicina)
+    det = np.flatnonzero(np.array([k == c for k in rec["det_classes"]], dtype=bool))
     is_c = np.array([k == c for k in rec["gt_classes"]], dtype=bool)
     near = np.array([k == NEIGHBOR[c] for k in rec["gt_classes"]], dtype=bool)
     ign = np.asarray(rec["gt_ignored"], dtype=bool)
-    return rec["det_boxes"][det_sel], rec["gt_boxes"][is_c & ~ign], rec["gt_boxes"][(is_c & ign) | near]
+    return det, np.flatnonzero(is_c & ~ign), np.flatnonzero((is_c & ign) | near)
+
+def class_split(rec, c):
+    # Come class_indices, ma con le scatole al posto degli indici
+    det, valid, ignored = class_indices(rec, c)
+    return rec["det_boxes"][det], rec["gt_boxes"][valid], rec["gt_boxes"][ignored]
 
 def collect(records, iou_fn):
     # Per ogni classe e ogni frame: le scatole e le tabelle di IoU
