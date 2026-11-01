@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 
 from config import DATA, SPLITS
@@ -16,6 +17,17 @@ def load_calib(i):
 def load_lidar(i):
     path = DATA / "velodyne" / f"{i:06d}.bin"
     return np.fromfile(path, dtype=np.float32).reshape(-1, 4)   # x, y, z, riflettanza
+
+def load_image(i, cam=2):
+    # Camera 2 (sinistra, quella delle label) o 3 (destra), RGB. La misura cambia fra frame (1224-1242 px)
+    path = DATA / f"image_{cam}" / f"{i:06d}.png"
+    img = cv2.imread(str(path), cv2.IMREAD_COLOR)
+    if img is None:                                         # OpenCV non solleva eccezioni: restituisce None
+        raise FileNotFoundError(f"{path} (scarica le immagini con scripts/download_images.sh)")
+    return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)             # OpenCV legge in BGR
+
+def load_stereo_pair(i):
+    return load_image(i, 2), load_image(i, 3)
 
 def frame_ids(split):
     # "train", "val", "trainval": frame elencati in ImageSets/<split>.txt
