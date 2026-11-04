@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 
 from config import RESULTS
-from detectors import camera_classic, lidar
+from detectors import camera_classic, lidar, lidar_net
 from evaluation.confusion import confusion_matrix, save_confusion
 from evaluation.iou import iou_3d
 from evaluation.result_analysis import analyze_run, load_run, make_sensor_video, save_run
@@ -18,6 +18,7 @@ from kitti.ground_truth import gt_boxes
 METHODS = {                                                 # metodo -> (detect, nuvola per grafici e video)
     "L1": (lidar.detect, lidar.cloud),
     "C1": (camera_classic.detect, camera_classic.cloud),
+    "L2": (lidar_net.detect, lidar_net.cloud),
 }
 
 
