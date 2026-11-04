@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 
 from config import RESULTS
-from detectors import camera_classic, fusion_early, lidar, lidar_net
+from detectors import camera_classic, fusion_early, fusion_mid, lidar, lidar_net
 from evaluation.confusion import confusion_matrix, save_confusion
 from evaluation.iou import iou_3d
 from evaluation.result_analysis import analyze_run, load_run, make_sensor_video, save_run
@@ -20,6 +20,7 @@ METHODS = {                                                 # metodo -> (detect,
     "C1": (camera_classic.detect, camera_classic.cloud),
     "L2": (lidar_net.detect, lidar_net.cloud),
     "FE": (fusion_early.detect, fusion_early.cloud),
+    "FM": (fusion_mid.detect, fusion_mid.cloud),
 }
 
 
